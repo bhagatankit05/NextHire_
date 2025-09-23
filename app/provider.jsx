@@ -11,34 +11,57 @@ const Provider = ({ children }) => {
 
     useEffect(() => {
         CreateNewUser();
+        const { data: subscription } = supabase.auth.onAuthStateChange(() => {
+            CreateNewUser();
+        });
+        return () => {
+            subscription?.subscription?.unsubscribe?.();
+        }
     }, []);
 
     const CreateNewUser = () => {
-        supabase.auth.getUser().then(async ({ data: { user } }
-        ) => {
-            //check if user already exist 
-            let { data: Users, error } = await supabase
-                .from('Users')
-                .select("*")
-                .eq('email', user?.email)
-
-            console.log(Users)
-
-            //if not then create new user
-            if (Users.length == 0) {
-                const { data, error } = await supabase.from("Users")
-                    .insert([{
-                        name: user?.user_metadata?.name,
-                        email: user?.email,
-                        picture: user?.user_metadata?.picture
-                    }])
-                console.log(data);
-                setUser(data);
+        supabase.auth.getUser().then(async ({ data, error }) => {
+            if (error) {
+                console.error('Error fetching auth user:', error.message);
                 return;
-
-
             }
-            setUser(Users[0]);
+            const authUser = data?.user;
+            if (!authUser) {
+                return;
+            }
+
+            const { data: existingUsers, error: selectError } = await supabase
+                .from('Users')
+                .select('*')
+                .eq('email', authUser.email);
+
+            if (selectError) {
+                console.error('Error querying Users table:', selectError.message);
+                return;
+            }
+
+            if (!existingUsers || existingUsers.length === 0) {
+                const { data: insertedUser, error: insertError } = await supabase
+                    .from('Users')
+                    .insert([
+                        {
+                            name: authUser.user_metadata?.name,
+                            email: authUser.email,
+                            picture: authUser.user_metadata?.picture
+                        }
+                    ])
+                    .select()
+                    .single();
+
+                if (insertError) {
+                    console.error('Error inserting user:', insertError.message);
+                    return;
+                }
+                setUser(insertedUser);
+                return;
+            }
+
+            setUser(existingUsers[0]);
         })
     }
     return (
