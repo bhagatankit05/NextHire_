@@ -45,7 +45,6 @@ const FormContainer = ({ onHandleInputChange , GoToNext }) => {
                 />
             </div>
 
-            {/* Job Description */}
             <div className="mt-5">
                 <h2 className="text-sm font-medium text-gray-700">Job Description</h2>
                 <Textarea
