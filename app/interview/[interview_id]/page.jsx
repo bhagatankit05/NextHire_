@@ -1,26 +1,41 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import InterviewHeader from '../_components/InterviewHeader'
 import Image from 'next/image'
-import { Clock, Info, VideoIcon } from 'lucide-react'
+import { Clock, Info, Loader2Icon, VideoIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useParams } from 'next/navigation'
 import { supabase } from '@/services/supabaseClient'
 import { toast } from 'sonner'
+import { InterviewDataContext } from '@/context/InterviewDataContext'
+import { useRouter } from 'next/navigation'
 
 const Page = () => {
     const { interview_id } = useParams();
-    console.log(interview_id);
+    const normalizedId = decodeURIComponent(Array.isArray(interview_id) ? interview_id[0] : String(interview_id || '')).trim();
+    console.log('interview_id param:', interview_id, 'normalized:', normalizedId);
 
     const [interviewData, setInterviewData] = useState();
     const [userName, setUserName] = useState();
     const [loading, setLoading] = useState(false);
+    const interviewCtx = useContext(InterviewDataContext);
+    const [hasLoadedSuccess, setHasLoadedSuccess] = useState(false);
+    const [hasShownError, setHasShownError] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
+    
 
+    const router = useRouter();
+
+    const fetchedRef = useRef(false);
     useEffect(() => {
-        interview_id && GetInterviewDetails();
-    }, [interview_id])
+        if (!normalizedId) return;
+        if (fetchedRef.current) return; // avoid double fetch in StrictMode
+        fetchedRef.current = true;
+        GetInterviewDetails();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [normalizedId])
 
     const GetInterviewDetails = async () => {
         setLoading(true);
@@ -28,23 +43,78 @@ const Page = () => {
         try {
             let { data: Interviews, error } = await supabase
                 .from('Interviews')
-                .select("jobPosition, jobDescription, duration, type")
-                .eq("interview_id", interview_id)
+                .select("job_position, job_description, duration, type, questions, questionList")
+                .eq("interview_id", normalizedId)
+                .limit(1)
 
-            setInterviewData(Interviews[0])
-            setLoading(false)
-            if (Interviews?.length === 0) {
-                toast('Incorrect Interview Link');
+            if (error) {
+                console.error('Supabase error (details):', error);
+                setLoading(false);
+                if (!hasLoadedSuccess && !hasShownError) {
+                    setHasShownError(true);
+                    setErrorMsg('Incorrect Interview Link');
+                }
                 return;
             }
+
+            if (!Interviews || Interviews.length === 0) {
+                console.warn('No interview row found for id:', normalizedId);
+                setLoading(false);
+                if (!hasLoadedSuccess && !hasShownError) {
+                    setHasShownError(true);
+                    setErrorMsg('Incorrect Interview Link');
+                }
+                return;
+            }
+            // Success path
+            setInterviewData(Interviews[0]);
+            setLoading(false);
+            setHasLoadedSuccess(true);
+            setErrorMsg('');
 
         } catch (e) {
             setLoading(false);
             toast('Incorrect Interview Link');
         }
+    }
 
+    const onJoinInterview = async () => {
+        setLoading(true);
+        try {
+            const { data: Interviews, error } = await supabase
+                .from('Interviews')
+                .select('*')
+                .eq('interview_id', normalizedId)
+                .limit(1);
 
+            if (error) {
+                console.error('Supabase error (join):', error);
+                toast('Unable to load interview');
+                setLoading(false);
+                return;
+            }
 
+            const info = Interviews?.[0];
+            if (!info) {
+                toast('Incorrect Interview Link');
+                setLoading(false);
+                return;
+            }
+
+            if (interviewCtx && typeof interviewCtx.setInterviewInfo === 'function') {
+                interviewCtx.setInterviewInfo({
+                    userName: userName,
+                    interviewData: Interviews[0]
+                });
+            }
+
+            router.push(`/interview/${encodeURIComponent(normalizedId)}/start`)
+            setLoading(false);
+        } catch (e) {
+            console.error(e);
+            toast('Unexpected error');
+            setLoading(false);
+        }
     }
 
     return (
@@ -76,7 +146,9 @@ const Page = () => {
                 </div>
                 <Button className={'mt-5 w-full font-bold'}
                     disabled={loading || !userName}
-                ><VideoIcon /> Join Interview</Button>
+
+                    onClick={()=>onJoinInterview()}
+                ><VideoIcon />{loading && <Loader2Icon className='animate-spin'/>} Join Interview</Button>
             </div>
         </div>
     )

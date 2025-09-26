@@ -7,7 +7,8 @@ import React from 'react'
 import { toast } from 'sonner'
 
 const InterviewLink = ({ interview_id, formData }) => {
-  const url = process.env.NEXT_PUBLIC_HOST_URL+'/'+interview_id
+  const base = process.env.NEXT_PUBLIC_HOST_URL || (typeof window !== 'undefined' ? window.location.origin : '');
+  const url = `${base}/interview/${encodeURIComponent(interview_id)}`
 const GetInterviewUrl=()=>{
   return url;
 }

@@ -117,10 +117,7 @@ const QuestionList = ({ formData ,onCreateLink}) => {
       const generated = parseQuestions(typeof content === 'string' ? content : JSON.stringify(content));
       setQuestions(generated);
       setRawContent(typeof content === 'string' ? content : JSON.stringify(content));
-      // Fire-and-forget persistence
-      if (generated.length) {
-        saveInterview(generated);
-      }
+      // Skip intermediate persistence to avoid duplicate rows.
       setLoading(false);
     } catch (error) {
       const msg = error?.response?.data?.error || error?.message || 'Server Error, Try Again Later!';
@@ -131,25 +128,31 @@ const QuestionList = ({ formData ,onCreateLink}) => {
 
   const onFinish = async () => {
     setSaveLoading(true);
-    const interview_id=uuidv4();
+    const interview_id = uuidv4();
+    const payload = {
+      interview_id,
+      job_position: formData?.jobPosition || '',
+      job_description: formData?.jobDescription || null,
+      duration: Number(formData?.duration) || null,
+      type: formData?.type || [],
+      questions: questions,
+      created_by: user?.email || null,
+      resume_used: !!formData?.resumeFile,
+    };
+
     const { data, error } = await supabase
       .from('Interviews')
-      .insert([
-        { 
-          ...formData,
-          questionList:questions,
-          userEmail:user?.email,
-          interview_id:interview_id
+      .insert([payload])
+      .select('interview_id')
+      .single();
 
+    setSaveLoading(false);
 
-         },
-      ])
-      .select()
-      setSaveLoading(false);
-
-      // Return the primitive string UUID up to parent, not an object
-      onCreateLink(interview_id)
-      
+    if (error) {
+      toast(error.message || 'Failed to save interview');
+      return;
+    }
+    onCreateLink(data?.interview_id || interview_id);
   }
   return (
     <div>
