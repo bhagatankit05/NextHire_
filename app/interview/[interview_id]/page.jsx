@@ -19,6 +19,7 @@ const Page = () => {
 
     const [interviewData, setInterviewData] = useState();
     const [userName, setUserName] = useState();
+    const [userEmail,setUserEmail]=useState(); 
     const [loading, setLoading] = useState(false);
     const interviewCtx = useContext(InterviewDataContext);
     const [hasLoadedSuccess, setHasLoadedSuccess] = useState(false);
@@ -43,7 +44,7 @@ const Page = () => {
         try {
             let { data: Interviews, error } = await supabase
                 .from('Interviews')
-                .select("job_position, job_description, duration, type, questions, questionList")
+                .select("*")
                 .eq("interview_id", normalizedId)
                 .limit(1)
 
@@ -66,8 +67,16 @@ const Page = () => {
                 }
                 return;
             }
-            // Success path
-            setInterviewData(Interviews[0]);
+            // Success path: normalize keys for UI consumption
+            const row = Interviews[0] || {};
+            const normalized = {
+                jobPosition: row.jobPosition ?? row.job_position ?? '',
+                jobDescription: row.jobDescription ?? row.job_description ?? '',
+                duration: row.duration ?? null,
+                type: row.type ?? [],
+                questions: row.questions ?? row.questionList ?? [],
+            };
+            setInterviewData(normalized);
             setLoading(false);
             setHasLoadedSuccess(true);
             setErrorMsg('');
@@ -104,6 +113,7 @@ const Page = () => {
             if (interviewCtx && typeof interviewCtx.setInterviewInfo === 'function') {
                 interviewCtx.setInterviewInfo({
                     userName: userName,
+                    userEmail:userEmail,
                     interviewData: Interviews[0]
                 });
             // Persist name so start page can show it when opened directly
@@ -133,6 +143,11 @@ const Page = () => {
                 <div className='w-full'>
                     <h2>Enter Your Full Name</h2>
                     <Input placeholder='e.g. Ankit Bhagat' onChange={(event)=>setUserName(event.target.value)}/>
+                </div>
+
+                <div className='w-full'>
+                    <h2>Enter Your Email</h2>
+                    <Input placeholder='e.g. ankitbhagat@gmail.com' onChange={(event)=>setUserEmail(event.target.value)}/>
                 </div>
 
                 <div className='p-3 bg-blue-100 flex gap-4 rounded-xl mt-4'>

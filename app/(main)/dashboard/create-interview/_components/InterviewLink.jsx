@@ -7,7 +7,15 @@ import React from 'react'
 import { toast } from 'sonner'
 
 const InterviewLink = ({ interview_id, formData }) => {
-  const base = process.env.NEXT_PUBLIC_HOST_URL || (typeof window !== 'undefined' ? window.location.origin : '');
+  let base = process.env.NEXT_PUBLIC_HOST_URL || (typeof window !== 'undefined' ? window.location.origin : '');
+  // Normalize base to avoid duplicate /interview when env contains path
+  try {
+    const u = new URL(base);
+    base = u.origin; // strip any path from env host
+  } catch {
+    // fallback: strip trailing /interview if present
+    if (base.endsWith('/interview')) base = base.slice(0, -'/interview'.length);
+  }
   const url = `${base}/interview/${encodeURIComponent(interview_id)}`
 const GetInterviewUrl=()=>{
   return url;
