@@ -106,6 +106,10 @@ const Page = () => {
                     userName: userName,
                     interviewData: Interviews[0]
                 });
+            // Persist name so start page can show it when opened directly
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('nh_user_name', userName || 'Candidate');
+            }
             }
 
             router.push(`/interview/${encodeURIComponent(normalizedId)}/start`)

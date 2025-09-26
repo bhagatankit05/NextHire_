@@ -131,13 +131,12 @@ const QuestionList = ({ formData ,onCreateLink}) => {
     const interview_id = uuidv4();
     const payload = {
       interview_id,
-      job_position: formData?.jobPosition || '',
-      job_description: formData?.jobDescription || null,
+      jobPosition: formData?.jobPosition || '',
+      jobDescription: formData?.jobDescription || null,
       duration: Number(formData?.duration) || null,
       type: formData?.type || [],
-      questions: questions,
-      created_by: user?.email || null,
-      resume_used: !!formData?.resumeFile,
+      questionList: questions,
+      userEmail: user?.email || null,
     };
 
     const { data, error } = await supabase

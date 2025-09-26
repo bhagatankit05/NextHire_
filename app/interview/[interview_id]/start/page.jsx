@@ -1,22 +1,62 @@
 "use client"
 
 import { InterviewDataContext } from '@/context/InterviewDataContext'
-import { Mic, Mic2, Phone, Timer } from 'lucide-react';
+import { Mic, Phone, Timer } from 'lucide-react';
 import Image from 'next/image';
-import React, { useContext, useEffect } from 'react'
-
+import React, { useContext, useEffect, useState } from 'react'
 import Vapi from '@vapi-ai/web';
 import AlertConfirmation from './_components/AlertConfirmation';
-
+import { toast } from 'sonner';
+import { useParams, useRouter } from 'next/navigation';
+import { supabase } from '@/services/supabaseClient';
 
 
 const StartInterview = () => {
+    const { interview_id } = useParams();
+    const router = useRouter();
     const {interviewInfo,setInterviewInfo}=useContext(InterviewDataContext);
     const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY);
 
+    const [activeUser , setActiveUser]=useState(false);
+    const [ready, setReady] = useState(false);
+
+    // Ensure interview info is loaded when user opens start page directly via link
     useEffect(()=>{
-      interviewInfo && startCall();
-    },[interviewInfo])
+      const init = async () => {
+        if (interviewInfo?.interviewData) {
+          setReady(true);
+          return;
+        }
+        try{
+          const { data, error } = await supabase
+            .from('Interviews')
+            .select('*')
+            .eq('interview_id', String(interview_id))
+            .limit(1);
+          if (error || !data || data.length===0) {
+            toast('Unable to load interview');
+            return;
+          }
+          const savedName = typeof window !== 'undefined' ? (localStorage.getItem('nh_user_name') || 'Candidate') : 'Candidate';
+          setInterviewInfo && setInterviewInfo({
+            userName: savedName,
+            interviewData: data[0]
+          });
+          setReady(true);
+        }catch(e){
+          toast('Unexpected error loading interview');
+        }
+      };
+      init();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+
+    useEffect(()=>{
+      if ((interviewInfo?.interviewData) || ready) {
+        startCall();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[ready, interviewInfo])
 
     const startCall=()=>{
       const fromArray = Array.isArray(interviewInfo?.interviewData?.questions)
@@ -82,10 +122,31 @@ vapi.start(assistantOptions)
     }
 
   const stopInterview=()=>{
-    vapi.stop()
+    vapi.stop();
+    router.replace(`/interview/${encodeURIComponent(String(interview_id))}`);
   }
 
- 
+  vapi.on("call-start",()=>{
+    console.log("Call has started");
+    toast("Recruiter is Connected...");
+  })
+
+  vapi.on("speech-start",()=>{
+    console.log("Assistant speech has started.")
+    setActiveUser(false);
+  });
+
+  vapi.on("speech-end",()=>{
+    console.log("Assistant Speech has ended.");
+    setActiveUser(true);
+  });
+
+  vapi.on("call-end",()=>{
+    console.log("Call has ended");
+    toast("Interview Ended");
+  })
+
+
 
   return (
     <div className='p-20 lg:px-48 xl:px-56'>
@@ -97,16 +158,22 @@ vapi.start(assistantOptions)
       </h2>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-7 mt-5'>
         <div className='bg-white h-[400px] rounded-lg border flex flex-col gap-3 items-center justify-center'>
+          <div className='relative'>
+          {!activeUser && <span className='absolute inset-0 rounded-full bg-blue-500/70 animate-ping'/>}
             <Image src={'/ai.png'} alt='Interviewer'
             width={400}
             height={400}
             className='w-[140px] h-[140px] rounded-full object-cover'/>
+            </div>
             <h2>AI Recruiter</h2>
         </div>
 
           <div className='bg-white h-[400px] rounded-lg border flex flex-col gap-3 items-center justify-center'>
-            <h2 className='text-2xl bg-primary text-white p-3 rounded-full px-5'>{interviewInfo?.userName[0]}</h2>
-            <h2>{interviewInfo?.userName}</h2>
+            <div className='relative'>
+              {activeUser && <span className='absolute inset-0 rounded-full bg-green-500/70 animate-ping'/>}
+            <h2 className='text-2xl bg-primary text-white h-[50px] rounded-full px-5'>{(interviewInfo?.userName||'C')[0]}</h2>
+            <h2>{interviewInfo?.userName||'Candidate'}</h2>
+            </div>
         </div>
 
       </div>
