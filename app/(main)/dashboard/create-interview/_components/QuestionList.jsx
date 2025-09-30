@@ -9,7 +9,7 @@ import QuestionListContainer from './QuestionListContainer';
 import { v4 as uuidv4 } from 'uuid';
 import { set } from 'mongoose';
 
-const QuestionList = ({ formData ,onCreateLink}) => {
+const QuestionList = ({ formData, onCreateLink }) => {
 
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -145,6 +145,13 @@ const QuestionList = ({ formData ,onCreateLink}) => {
       .select('interview_id')
       .single();
 
+    //Update User Credit
+    const userUpdate = await supabase
+      .from('Users')
+      .update({credits: Number(user?.credits)-1 })
+      .eq('email',user?.email)
+      .select();
+
     setSaveLoading(false);
 
     if (error) {
@@ -177,7 +184,7 @@ const QuestionList = ({ formData ,onCreateLink}) => {
       <div className='flex justify-end mt-10'>
         <Button onClick={() => { onFinish() }} disabled={saveLoading}>
           {saveLoading && <Loader2Icon className='animate-spin' />}
-         Create Interview Link & Finish</Button>
+          Create Interview Link & Finish</Button>
       </div>
     </div>
   )
