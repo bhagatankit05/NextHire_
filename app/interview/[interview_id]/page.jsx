@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import InterviewHeader from '../_components/InterviewHeader'
 import Image from 'next/image'
-import { Clock, Info, Loader2Icon, VideoIcon } from 'lucide-react'
+import { Clock, Info, Loader as Loader2Icon, Video as VideoIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useParams } from 'next/navigation'
