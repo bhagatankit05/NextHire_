@@ -72,7 +72,7 @@ const onCopyLink= async ()=>{
        <Link href='/dashboard'>
          <Button variant={'outline'} className=''><ArrowLeft/> Back to Dashboard</Button>
        </Link>
-       <Link href={'/create-interview'}>
+       <Link href={'/dashboard/create-interview'}>
         <Button><Plus/> Create New Interview</Button>
         </Link>
       </div>

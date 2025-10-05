@@ -49,9 +49,11 @@ export function AppSidebar() {
                     className="w-[150px] object-contain mb-6"
                 />
 
-                <Button className="w-full rounded-xl shadow hover:shadow-lg transition-all duration-300">
-                    <Plus className="mr-2 h-4 w-4" /> Create New Interview
-                </Button>
+                <Link href="/dashboard/create-interview" className="w-full">
+                    <Button className="w-full rounded-xl shadow hover:shadow-lg transition-all duration-300">
+                        <Plus className="mr-2 h-4 w-4" /> Create New Interview
+                    </Button>
+                </Link>
             </SidebarHeader>
 
             <SidebarContent>

@@ -16,6 +16,7 @@ const UploadResumePage = () => {
   const router = useRouter();
   const [step,setStep] = useState(1);
   const [formData,setFormData] = useState({});
+  const [interviewId, setInterviewId] = useState();
 
   const onHandleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -26,10 +27,15 @@ const UploadResumePage = () => {
 
   const onNext = () => {
     if (!formData?.jobPosition||!formData?.resumeFile||!formData?.duration||!(formData?.type||[]).length) {
-      toast('Please select a resume and fill all fields')
+      toast.error('Please select a resume and fill all fields')
       return;
     }
     setStep(2);
+  }
+
+  const onCreateLink = (interview_id) => {
+    setInterviewId(interview_id);
+    setStep(3);
   }
 
   return (
@@ -98,8 +104,8 @@ const UploadResumePage = () => {
         </div>
       )}
 
-      {step===2 && <QuestionList formData={formData}/>}    
-      {step===3 &&<InterviewLink />}
+      {step===2 && <QuestionList formData={formData} onCreateLink={onCreateLink}/>}
+      {step===3 &&<InterviewLink interview_id={interviewId} formData={formData} />}
     </div>
   )
 }

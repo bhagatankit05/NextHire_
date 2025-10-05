@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/services/supabaseClient";
 
 export default function Home() {
-  const [user, setUser] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -13,24 +12,18 @@ export default function Home() {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
-        // Redirect to the login page if no user is signed in
         router.push("/auth");
       } else {
-        setUser(user);
+        router.push("/dashboard");
       }
     };
 
     checkUser();
   }, [router]);
 
-  if (!user) {
-    // Optionally, you can show a loading state while checking authentication
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div>
-      Welcome, {user.user_metadata?.name || "User"}!
+    <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
     </div>
   );
 }
