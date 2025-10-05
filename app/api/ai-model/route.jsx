@@ -72,20 +72,24 @@ export async function POST(req) {
       if (file && typeof file.arrayBuffer === 'function') {
         const buffer = Buffer.from(await file.arrayBuffer());
         const filename = file.name || '';
-        // Parse text from buffer
         if (filename.toLowerCase().endsWith('.pdf')) {
           try {
-            const { default: pdfParse } = await import('pdf-parse/lib/pdf-parse.js');
+            const pdfParse = (await import('pdf-parse')).default;
             const parsed = await pdfParse(buffer);
-            jobDescription = parsed.text || '';
+            jobDescription = `Resume Content:\n${parsed.text || ''}`;
           } catch (e) {
             console.error('PDF parse error:', e);
             return NextResponse.json({ error: 'Failed to parse PDF resume' }, { status: 400 });
           }
         } else if (filename.toLowerCase().endsWith('.docx')) {
-          const { default: mammoth } = await import('mammoth');
-          const result = await mammoth.extractRawText({ buffer });
-          jobDescription = result.value || '';
+          try {
+            const mammoth = (await import('mammoth')).default;
+            const result = await mammoth.extractRawText({ buffer });
+            jobDescription = `Resume Content:\n${result.value || ''}`;
+          } catch (e) {
+            console.error('DOCX parse error:', e);
+            return NextResponse.json({ error: 'Failed to parse DOCX resume' }, { status: 400 });
+          }
         } else {
           return NextResponse.json({ error: 'Unsupported file type. Please upload .pdf or .docx' }, { status: 400 });
         }

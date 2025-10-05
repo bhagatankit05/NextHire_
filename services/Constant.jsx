@@ -62,15 +62,19 @@ export const InterviewTypes = [
 export const QUESTIONS_PROMPT=`You are an expert technical interviewer.
 Based on the following inputs, generate a well-structured list of high-quality interview questions:
 Job Title: {{jobTitle}}
-Job Description: {{jobDescription}}
-Interview Duration: {{duration}}
+Job Description/Resume: {{jobDescription}}
+Interview Duration: {{duration}} minutes
 Interview Type: {{type}}
 
 📝 Your task:
-Analyze the job description to identify key responsibilities, required skills, and expected experience.
-Generate a list of interview questions depends on interview duration
-Adjust the number and depth of questions to match the interview duration.
-Ensure the questions match the tone and structure of a real-life {{type}} interview.
+- If the Job Description contains resume content, carefully analyze the candidate's skills, experience, projects, and qualifications
+- Extract key technical skills, technologies, and experiences from the resume
+- Generate targeted questions that probe deeper into the specific experiences and skills mentioned in the resume
+- For candidates with strong backgrounds, create more advanced questions matching their level
+- If no resume is provided, analyze the job description to identify key responsibilities and required skills
+- Generate a list of interview questions based on interview duration (aim for approximately {{duration}}/5 questions)
+- Adjust the number and depth of questions to match the interview duration
+- Ensure the questions match the tone and structure of a real-life {{type}} interview
 
 🌱 Format your response in JSON format with array list of questions.
 format: interviewQuestions=[
@@ -81,7 +85,7 @@ format: interviewQuestions=[
   ...
 ]
 
-🎯 The goal is to create a structured, relevant, and time-optimized interview plan for a {{jobTitle}} role.`
+🎯 The goal is to create a structured, relevant, and time-optimized interview plan for a {{jobTitle}} role that aligns with the candidate's background if a resume is provided.`
 
 export const FEEDBACK_PROMPT=`{{conversation}}
 
