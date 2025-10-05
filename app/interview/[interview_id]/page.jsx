@@ -19,13 +19,14 @@ const Page = () => {
 
     const [interviewData, setInterviewData] = useState();
     const [userName, setUserName] = useState();
-    const [userEmail,setUserEmail]=useState(); 
+    const [userEmail,setUserEmail]=useState();
     const [loading, setLoading] = useState(false);
-    const interviewCtx = useContext(InterviewDataContext);
+    const context = useContext(InterviewDataContext);
+    const interviewCtx = context || { setInterviewInfo: () => {} };
     const [hasLoadedSuccess, setHasLoadedSuccess] = useState(false);
     const [hasShownError, setHasShownError] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
-    
+
 
     const router = useRouter();
 

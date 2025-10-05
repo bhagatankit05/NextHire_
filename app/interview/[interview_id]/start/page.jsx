@@ -16,7 +16,9 @@ import TimerComponent from '../../_components/TimerComponent';
 const StartInterview = () => {
   const { interview_id } = useParams();
   const router = useRouter();
-  const { interviewInfo, setInterviewInfo } = useContext(InterviewDataContext);
+  const context = useContext(InterviewDataContext);
+  const interviewInfo = context?.interviewInfo;
+  const setInterviewInfo = context?.setInterviewInfo;
   const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY);
   const [activeUser, setActiveUser] = useState(false);
   const [ready, setReady] = useState(false);
