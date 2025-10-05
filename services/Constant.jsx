@@ -1,4 +1,4 @@
-import { BriefcaseBusinessIcon, CalendarHeart, Code2Icon, FileText, GraduationCap, LayoutDashboard, List, Settings, User2Icon, UserCheck, WalletCards } from "lucide-react";
+import { BriefcaseBusiness as BriefcaseBusinessIcon, CalendarHeart, Code as Code2Icon, FileText, GraduationCap, LayoutDashboard, List, Settings, User as User2Icon, UserCheck, WalletCards } from "lucide-react";
 
 export const SideBarOptions = [
     {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Loader2Icon } from 'lucide-react';
+import { Loader as Loader2Icon } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner';
 import { supabase } from '@/services/supabaseClient';
