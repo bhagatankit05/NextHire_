@@ -143,12 +143,20 @@ const Page = () => {
 
                 <div className='w-full'>
                     <h2>Enter Your Full Name</h2>
-                    <Input placeholder='e.g. Ankit Bhagat' onChange={(event)=>setUserName(event.target.value)}/>
+                    <Input
+                        placeholder='e.g. Ankit Bhagat'
+                        value={userName || ''}
+                        onChange={(event)=>setUserName(event.target.value)}
+                    />
                 </div>
 
                 <div className='w-full'>
                     <h2>Enter Your Email</h2>
-                    <Input placeholder='e.g. ankitbhagat@gmail.com' onChange={(event)=>setUserEmail(event.target.value)}/>
+                    <Input
+                        placeholder='e.g. ankitbhagat@gmail.com'
+                        value={userEmail || ''}
+                        onChange={(event)=>setUserEmail(event.target.value)}
+                    />
                 </div>
 
                 <div className='p-3 bg-blue-100 flex gap-4 rounded-xl mt-4'>
@@ -165,10 +173,13 @@ const Page = () => {
                     </div>
                 </div>
                 <Button className={'mt-5 w-full font-bold'}
-                    disabled={loading || !userName}
-
+                    disabled={loading || !userName?.trim() || !interviewData}
                     onClick={()=>onJoinInterview()}
-                ><VideoIcon />{loading && <Loader2Icon className='animate-spin'/>} Join Interview</Button>
+                >
+                    <VideoIcon />
+                    {loading && <Loader2Icon className='animate-spin'/>}
+                    Join Interview
+                </Button>
             </div>
         </div>
     )
