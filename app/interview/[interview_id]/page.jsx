@@ -138,48 +138,70 @@ const Page = () => {
                 <Image src="/logo.png" alt="Logo" width={100} height={50} className='w-[140px]' />
                 <h2 className='mt-3'>AI-powered Interview Platform</h2>
                 <Image src={'/interview_st.png'} alt='Interview Stage' width={500} height={500} className='w-[300px] my-4' />
-                <h2 className='font-bold text-lg '>{interviewData?.jobPosition}</h2>
-                <h2 className='flex gap-2 items-center text-gray-500 mt-3'><Clock className='h-4 w-4' /> {interviewData?.duration} Min </h2>
 
-                <div className='w-full'>
-                    <h2>Enter Your Full Name</h2>
-                    <Input
-                        placeholder='e.g. Ankit Bhagat'
-                        value={userName || ''}
-                        onChange={(event)=>setUserName(event.target.value)}
-                    />
-                </div>
-
-                <div className='w-full'>
-                    <h2>Enter Your Email</h2>
-                    <Input
-                        placeholder='e.g. ankitbhagat@gmail.com'
-                        value={userEmail || ''}
-                        onChange={(event)=>setUserEmail(event.target.value)}
-                    />
-                </div>
-
-                <div className='p-3 bg-blue-100 flex gap-4 rounded-xl mt-4'>
-                    <Info className='text-primary ' />
-                    <div >
-                        <h2 className='font-bold'>Before you begin</h2>
-                        <ul>
-                            <li className='text-sm text-primary'>-Test your camera and microphone</li>
-                            <li className='text-sm text-primary'>-Ensure you have a stable internet connection</li>
-                            <li className='text-sm text-primary'>-Find a quiet and comfortable space for the interview</li>
-                            <li className='text-sm text-primary'>-Have your resume and any relevant materials ready</li>
-
-                        </ul>
+                {loading && !interviewData && (
+                    <div className='flex items-center gap-2 text-gray-500'>
+                        <Loader2Icon className='animate-spin h-5 w-5' />
+                        <span>Loading interview details...</span>
                     </div>
-                </div>
-                <Button className={'mt-5 w-full font-bold'}
-                    disabled={loading || !userName?.trim() || !interviewData}
-                    onClick={()=>onJoinInterview()}
-                >
-                    <VideoIcon />
-                    {loading && <Loader2Icon className='animate-spin'/>}
-                    Join Interview
-                </Button>
+                )}
+
+                {errorMsg && (
+                    <div className='p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 mb-4'>
+                        {errorMsg}
+                    </div>
+                )}
+
+                {interviewData && (
+                    <>
+                        <h2 className='font-bold text-lg '>{interviewData?.jobPosition}</h2>
+                        <h2 className='flex gap-2 items-center text-gray-500 mt-3'><Clock className='h-4 w-4' /> {interviewData?.duration} Min </h2>
+                    </>
+                )}
+
+                {interviewData && (
+                    <>
+                        <div className='w-full mt-4'>
+                            <h2>Enter Your Full Name</h2>
+                            <Input
+                                placeholder='e.g. Ankit Bhagat'
+                                value={userName || ''}
+                                onChange={(event)=>setUserName(event.target.value)}
+                            />
+                        </div>
+
+                        <div className='w-full mt-4'>
+                            <h2>Enter Your Email</h2>
+                            <Input
+                                placeholder='e.g. ankitbhagat@gmail.com'
+                                value={userEmail || ''}
+                                onChange={(event)=>setUserEmail(event.target.value)}
+                            />
+                        </div>
+
+                        <div className='p-3 bg-blue-100 flex gap-4 rounded-xl mt-4'>
+                            <Info className='text-primary ' />
+                            <div >
+                                <h2 className='font-bold'>Before you begin</h2>
+                                <ul>
+                                    <li className='text-sm text-primary'>-Test your camera and microphone</li>
+                                    <li className='text-sm text-primary'>-Ensure you have a stable internet connection</li>
+                                    <li className='text-sm text-primary'>-Find a quiet and comfortable space for the interview</li>
+                                    <li className='text-sm text-primary'>-Have your resume and any relevant materials ready</li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <Button className={'mt-5 w-full font-bold'}
+                            disabled={loading || !userName?.trim() || !interviewData}
+                            onClick={()=>onJoinInterview()}
+                        >
+                            <VideoIcon />
+                            {loading && <Loader2Icon className='animate-spin'/>}
+                            Join Interview
+                        </Button>
+                    </>
+                )}
             </div>
         </div>
     )
