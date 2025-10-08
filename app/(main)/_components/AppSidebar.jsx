@@ -49,7 +49,7 @@ export function AppSidebar() {
                     className="w-[150px] object-contain mb-6"
                 />
 
-                <Link href="/dashboard/create-interview" className="w-full">
+                <Link href="/dashboard/create-interview" className="w-full cursor-pointer">
                     <Button className="w-full rounded-xl shadow hover:shadow-lg transition-all duration-300">
                         <Plus className="mr-2 h-4 w-4" /> Create New Interview
                     </Button>
@@ -67,7 +67,7 @@ export function AppSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link
                                             href={option.path}
-                                            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ease-in-out group
+                                            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ease-in-out group cursor-pointer
                                                 ${isActive
                                                     ? "bg-blue-50 text-blue-600 font-semibold shadow-sm"
                                                     : "text-gray-700 hover:bg-gray-100 hover:text-blue-600"

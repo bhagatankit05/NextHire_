@@ -62,6 +62,7 @@ export async function POST(req) {
     let jobDescription = '';
     let duration = '';
     let type = [];
+    const parseWarnings = [];
 
     if (contentType.includes('multipart/form-data')) {
       const form = await req.formData();
@@ -79,7 +80,9 @@ export async function POST(req) {
             jobDescription = `Resume Content:\n${parsed.text || ''}`;
           } catch (e) {
             console.error('PDF parse error:', e);
-            return NextResponse.json({ error: 'Failed to parse PDF resume' }, { status: 400 });
+            // Fall back to general questions instead of failing hard
+            parseWarnings.push('Failed to parse PDF content. Proceeding with general questions.');
+            jobDescription = '';
           }
         } else if (filename.toLowerCase().endsWith('.docx')) {
           try {
@@ -88,7 +91,9 @@ export async function POST(req) {
             jobDescription = `Resume Content:\n${result.value || ''}`;
           } catch (e) {
             console.error('DOCX parse error:', e);
-            return NextResponse.json({ error: 'Failed to parse DOCX resume' }, { status: 400 });
+            // Fall back to general questions instead of failing hard
+            parseWarnings.push('Failed to parse DOCX content. Proceeding with general questions.');
+            jobDescription = '';
           }
         } else {
           return NextResponse.json({ error: 'Unsupported file type. Please upload .pdf or .docx' }, { status: 400 });
@@ -132,7 +137,7 @@ export async function POST(req) {
 
     const reply = completion.choices?.[0]?.message?.content || '';
     const questions = extractQuestionsFromContent(reply);
-    return NextResponse.json({ questions, raw: reply });
+    return NextResponse.json({ questions, raw: reply, warnings: parseWarnings });
   } catch (error) {
     console.error('AI API error:', error);
     return NextResponse.json({ error: error?.message || 'Something went wrong' }, { status: 500 });

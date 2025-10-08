@@ -56,7 +56,7 @@ const ScheduledInterview = () => {
                   <div className='col-span-2'>{duration} min</div>
                   <div className='col-span-4 truncate'>{types}</div>
                   <div className='col-span-2 text-right'>
-                    <Link href={`/scheduled-interviews/${encodeURIComponent(r.interview_id || r.id)}`} className='text-primary inline-flex items-center gap-1'>
+                    <Link href={`/scheduled-interviews/${encodeURIComponent(r.interview_id || r.id)}`} className='text-primary inline-flex items-center gap-1 cursor-pointer'>
                       View Detail <ExternalLink className='h-4 w-4'/>
                     </Link>
                   </div>

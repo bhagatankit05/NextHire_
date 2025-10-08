@@ -69,10 +69,10 @@ const onCopyLink= async ()=>{
 
       </div>
       <div className='flex w-full gap-5 justify-between mt-6'>
-       <Link href='/dashboard'>
+       <Link href='/dashboard' className='cursor-pointer'>
          <Button variant={'outline'} className=''><ArrowLeft/> Back to Dashboard</Button>
        </Link>
-       <Link href={'/dashboard/create-interview'}>
+       <Link href={'/dashboard/create-interview'} className='cursor-pointer'>
         <Button><Plus/> Create New Interview</Button>
         </Link>
       </div>

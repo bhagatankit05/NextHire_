@@ -3,7 +3,7 @@ import React from 'react'
 const Settings = () => {
   return (
     <div>
-      Implement Settings page
+      setting will be implementing soon!
     </div>
   )
 }
