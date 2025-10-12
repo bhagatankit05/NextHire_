@@ -7,15 +7,9 @@ export const SideBarOptions = [
         path: '/dashboard'
     },
     {
-<<<<<<< HEAD
-        name: "Scheduled Interviews",
-        icon: CalendarHeart,
-        path: '/scheduled-interviews'
-=======
         name: "Resume Analyzer",
         icon: FileText,
         path: "https://ai-resume-analyzer-three-blond.vercel.app/",
->>>>>>> f2a4503e9137aecf670c7ae0604e1df9a55b61a2
     },
     {
         name: "All Interview",
