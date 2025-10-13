@@ -40,27 +40,25 @@ const LatestInterviewsList = () => {
     }, [user?.email]);
 
     return (
-        <section className="my-8 px-4 sm:px-6 lg:px-8">
-            <header className="mb-6 text-center">
-                <h2 className="text-3xl font-bold text-gray-900 transition-opacity duration-500 ease-in-out">
-                    Previously Created Interviews
-                </h2>
-                <p className="text-sm text-gray-500 mt-1">Review your recent interview setups</p>
+        <section className="my-10 px-4 sm:px-6 lg:px-8">
+            <header className="mb-8 text-center">
+                <h2 className="text-3xl font-bold text-gray-900">Previously Created Interviews</h2>
+                <p className="text-sm text-gray-500 mt-2">Review your recent interview setups</p>
             </header>
 
             {loading && (
-                <div className="flex flex-col items-center justify-center py-16 animate-fade-in">
-                    <Loader2 className="h-10 w-10 text-blue-600 animate-spin transition-transform duration-300 ease-in-out" />
-                    <p className="mt-4 text-gray-500 text-sm">Loading interviews...</p>
+                <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
+                    <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
+                    <p className="mt-4 text-gray-500 text-sm font-mono">Loading interviews...</p>
                 </div>
             )}
 
             {!loading && interviewList.length === 0 && (
-                <div className="border-2 border-dashed border-gray-300 rounded-xl p-10 flex flex-col items-center justify-center text-center bg-gray-50 transition-all duration-500 ease-in-out animate-fade-in">
-                    <Video className="h-14 w-14 text-blue-600 mb-4 transform hover:scale-110 transition-transform duration-300" />
+                <div className="border border-gray-300 border-dashed rounded-xl p-10 flex flex-col items-center justify-center text-center bg-gray-50 shadow-sm animate-fade-in transition-all duration-500">
+                    <Video className="h-14 w-14 text-blue-500 mb-4 transition-transform hover:scale-110" />
                     <h3 className="text-xl font-semibold text-gray-700">No interviews created yet</h3>
-                    <p className="text-sm text-gray-500 mt-2">Start by creating your first AI-powered interview.</p>
-                    <Button className="mt-6 px-6 py-2 text-sm font-medium transition-transform hover:scale-105 duration-300">
+                    <p className="text-sm text-gray-500 mt-2 font-mono">Start by creating your first AI-powered interview.</p>
+                    <Button className="mt-6 px-6 py-2 text-sm font-medium transition hover:scale-105">
                         + Create New Interview
                     </Button>
                 </div>
@@ -71,7 +69,7 @@ const LatestInterviewsList = () => {
                     {interviewList.map((interview, index) => (
                         <div
                             key={index}
-                            className="animate-fade-in-up transition-opacity duration-500 ease-in-out"
+                            className="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 p-5 animate-fade-in-up"
                             style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
                         >
                             <InterviewCard interview={interview} />
