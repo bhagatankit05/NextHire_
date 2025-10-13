@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useUser } from '@/app/provider';
 import { Button } from '@/components/ui/button';
@@ -40,34 +40,46 @@ const LatestInterviewsList = () => {
     }, [user?.email]);
 
     return (
-        <div className='my-5'>
-            <h2 className='font-bold text-2xl mb-5'>Previously Created Interviews</h2>
+        <section className="my-8 px-4 sm:px-6 lg:px-8">
+            <header className="mb-6 text-center">
+                <h2 className="text-3xl font-bold text-gray-900 transition-opacity duration-500 ease-in-out">
+                    Previously Created Interviews
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">Review your recent interview setups</p>
+            </header>
 
             {loading && (
-                <div className="flex flex-col items-center justify-center mt-10">
-                    <Loader2 className="h-10 w-10 text-primary animate-spin" />
-                    <p className="mt-3 text-gray-500">Loading interviews...</p>
+                <div className="flex flex-col items-center justify-center py-16 animate-fade-in">
+                    <Loader2 className="h-10 w-10 text-blue-600 animate-spin transition-transform duration-300 ease-in-out" />
+                    <p className="mt-4 text-gray-500 text-sm">Loading interviews...</p>
                 </div>
             )}
 
             {!loading && interviewList.length === 0 && (
-                <div className='p-8 flex flex-col gap-4 items-center justify-center border border-dashed rounded-lg mt-5'>
-                    <Video className='h-12 w-12 text-primary' />
-                    <h2 className='text-lg font-medium text-gray-700 text-center'>
-                        You haven’t created any interviews so far!
-                    </h2>
-                    <Button className='mt-3 px-6 py-2 text-sm'>+ Create New Interview</Button>
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-10 flex flex-col items-center justify-center text-center bg-gray-50 transition-all duration-500 ease-in-out animate-fade-in">
+                    <Video className="h-14 w-14 text-blue-600 mb-4 transform hover:scale-110 transition-transform duration-300" />
+                    <h3 className="text-xl font-semibold text-gray-700">No interviews created yet</h3>
+                    <p className="text-sm text-gray-500 mt-2">Start by creating your first AI-powered interview.</p>
+                    <Button className="mt-6 px-6 py-2 text-sm font-medium transition-transform hover:scale-105 duration-300">
+                        + Create New Interview
+                    </Button>
                 </div>
             )}
 
             {!loading && interviewList.length > 0 && (
-                <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-5'>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">
                     {interviewList.map((interview, index) => (
-                        <InterviewCard interview={interview} key={index} />
+                        <div
+                            key={index}
+                            className="animate-fade-in-up transition-opacity duration-500 ease-in-out"
+                            style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
+                        >
+                            <InterviewCard interview={interview} />
+                        </div>
                     ))}
                 </div>
             )}
-        </div>
+        </section>
     );
 };
 
