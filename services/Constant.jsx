@@ -9,7 +9,7 @@ export const SideBarOptions = [
     {
         name: "Resume Analyzer",
         icon: FileText,
-        path: "https://ai-resume-analyzer-git-main-ayushbodeles-projects.vercel.app//",
+        path: "https://ai-resume-analyzer-three-blond.vercel.app/",
     },
     {
         name: "All Interview",
