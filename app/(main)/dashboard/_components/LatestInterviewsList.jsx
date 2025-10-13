@@ -58,7 +58,7 @@ const LatestInterviewsList = () => {
                     <Video className="h-14 w-14 text-blue-500 mb-4 transition-transform hover:scale-110" />
                     <h3 className="text-xl font-semibold text-gray-700">No interviews created yet</h3>
                     <p className="text-sm text-gray-500 mt-2 font-mono">Start by creating your first AI-powered interview.</p>
-                    <Button className="mt-6 px-6 py-2 text-sm font-medium transition hover:scale-105">
+                    <Button className="mt-6 px-6 py-2 text-sm font-medium transition hover:scale-105 bg-blue-500 hover:bg-blue-600 text-white">
                         + Create New Interview
                     </Button>
                 </div>
@@ -69,7 +69,7 @@ const LatestInterviewsList = () => {
                     {interviewList.map((interview, index) => (
                         <div
                             key={index}
-                            className="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 p-5 animate-fade-in-up"
+                            className="bg-white rounded-xl shadow-md border border-gray-200 hover:border-blue-500 hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 p-5 animate-fade-in-up"
                             style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
                         >
                             <InterviewCard interview={interview} />
