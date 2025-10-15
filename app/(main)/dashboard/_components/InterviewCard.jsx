@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button'
-import { Copy, Send, Briefcase } from 'lucide-react'
+import { Copy, Briefcase } from 'lucide-react'
 import moment from 'moment'
 import React from 'react'
 import { toast } from 'sonner'
+import ShareInterviewDialog from '@/components/ShareInterviewDialog'
 
 const InterviewCard = ({ interview }) => {
     const url = `${process.env.NEXT_PUBLIC_HOST_URL}/${interview?.interview_id}`
@@ -10,10 +11,6 @@ const InterviewCard = ({ interview }) => {
     const copyLink = () => {
         navigator.clipboard.writeText(url)
         toast('Copied!')
-    }
-
-    const onSend = () => {
-        window.location.href = `mailto:accounts@gmail.com?subject=NextHire Interview Link&body=Interview Link: ${url}`
     }
 
     return (
@@ -38,12 +35,9 @@ const InterviewCard = ({ interview }) => {
                 >
                     <Copy className='h-4 w-4' /> Copy Link
                 </Button>
-                <Button
-                    className='flex-1 flex items-center justify-center gap-2'
-                    onClick={onSend}
-                >
-                    <Send className='h-4 w-4' /> Send
-                </Button>
+                <div className='flex-1'>
+                    <ShareInterviewDialog interview={interview} />
+                </div>
             </div>
         </div>
     )
