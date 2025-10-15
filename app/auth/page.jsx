@@ -1,51 +1,55 @@
-"use client"; 
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { supabase } from '@/services/supabaseClient';
-import Image from 'next/image';
-import React from 'react';
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/services/supabaseClient";
+import Image from "next/image";
+import React from "react";
 
 const Login = () => {
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: {
-        redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/dashboard` : undefined,
+        redirectTo:
+          typeof window !== "undefined"
+            ? `${window.location.origin}/dashboard`
+            : undefined,
       },
     });
     if (error) {
-      console.error('Error:', error.message);
+      console.error("Error:", error.message);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <div className="flex flex-col items-center border rounded-2xl p-10">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4">
+      <div className="bg-white rounded-3xl shadow-xl p-10 w-full max-w-md text-center">
         <Image
-          src={'/logo.png'}
-          alt="logo"
-          width={100}
-          height={100}
-          className="w-[180px] roun"
+          src="/logo.png"
+          alt="NextHire Logo"
+          width={140}
+          height={50}
+          className="mx-auto mb-6"
         />
-        <div className="flex flex-col itmes-center">
-          <Image
-            src={'/login.png'}
-            alt="login"
-            width={600}
-            height={400}
-            className="w-[400px] h-[250px] rounded-2xl"
-          />
-          <h2 className="text-2xl font-bold text-center mt-5">
-            Welcome to NextHire
-          </h2>
-          <p className="text-gray-500 text-center">
-            Sign In With Google Authentication
-          </p>
-          <Button className="mt-7" onClick={signInWithGoogle}>
-            Login with Google
-          </Button>
-        </div>
+        <Image
+          src="/login.png"
+          alt="Login Illustration"
+          width={400}
+          height={250}
+          className="mx-auto rounded-xl mb-6"
+        />
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          Welcome to <span className="text-blue-600">NextHire</span>
+        </h2>
+        <p className="text-gray-500 text-sm mb-6">
+          Sign in with your Google account to get started
+        </p>
+        <Button
+          onClick={signInWithGoogle}
+          className="w-full py-3 font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 rounded-lg"
+        >
+          Login with Google
+        </Button>
       </div>
     </div>
   );
