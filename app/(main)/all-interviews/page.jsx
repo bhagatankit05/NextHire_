@@ -63,18 +63,19 @@ const AllInterview = () => {
       )}
 
       {!loading && interviewList.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">
-          {interviewList.map((interview, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 p-5 animate-fade-in-up"
-              style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
-            >
-              <InterviewCard interview={interview} />
-            </div>
-          ))}
-        </div>
-      )}
+  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">
+    {interviewList.map((interview, index) => (
+      <div
+        key={index}
+        className="bg-white rounded-xl shadow-md border border-transparent hover:border-sky-500 hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 p-5 animate-fade-in-up"
+        style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
+      >
+        <InterviewCard interview={interview} />
+      </div>
+    ))}
+  </div>
+)}
+
     </section>
   );
 };
